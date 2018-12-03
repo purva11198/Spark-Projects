@@ -1,0 +1,32 @@
+package com.concept.dataset.prac;
+
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+import scala.Function1;
+
+public class StructuredSpark {
+	public static void main(String[] args) {
+		String input="/home/purva/spark-data/TweetsProject/input.json";
+		SparkSession spark = SparkSession.builder().master("local").appName("faltu").getOrCreate();
+				
+		// rdd
+		Dataset<Row> frameinput = spark.read().json(input);
+		//frameinput.printSchema();
+		//System.out.println(frameinput.first().toString());
+		
+		//dtaframe to javardd
+		JavaRDD<Row> test=frameinput.toJavaRDD();
+		JavaRDD<String> test2 = test.map(s -> s.toString());
+		
+		
+		//manipulations
+		Dataset<Row> framemap = frameinput.map((MapFunction<Row,Row>) row-> row.get(0)),Encoders.bean(Row.class));
+		framemap.show();
+		
+	}
+}

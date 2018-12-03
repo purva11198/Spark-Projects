@@ -1,0 +1,49 @@
+package com.movie;
+
+import java.util.Arrays;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+public class DatasetMovie {
+
+	public static void main(String[] args) {
+
+		SparkSession spark=SparkSession.builder().master("local").appName("travel analysis").getOrCreate();
+
+		Dataset<Row> iteminp=spark.read().format("csv").option("delimiter", "|")
+				.load("/home/purva/spark-data/VacationProjects/movie/ml-100k/u.item");
+		//iteminp.printSchema();
+		Dataset<Row> baseinp=spark.read().format("csv").option("delimiter", "\t")
+				.load("/home/purva/spark-data/VacationProjects/movie/ml-100k/u1.base");
+		//baseinp.printSchema();
+
+//how many movies were produced per year
+		Dataset<Row> movieyear11=iteminp.select(iteminp.col("_c1"),iteminp.col("_c2"));
+	
+		Dataset<Row> movieyear12=movieyear11.selectExpr("_c1","split(_c2, '-')[0] as date","split(_c2, '-')[1] as month","split(_c2, '-')[2] as year");
+		
+		Dataset<Row> movieyear13 = movieyear12.groupBy("year") //<k, iter(V)>
+	    		.count()
+	    		.toDF("year","moviecount");
+		
+		//movieyear13.show();
+		 		
+//what were the most popular movie genres year by year
+		
+//what tags best summarize a movie genre
+		
+//what were the best movies of every decade(based on users rating)
+		
+//what were the best years for a genre(based on users ratings)
+		
+//who is the best movie director
+		
+//what cast is the ultimate movie cast
+		
+	}
+
+}

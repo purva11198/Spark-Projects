@@ -1,0 +1,19 @@
+package com.concept.dataset.prac;
+
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+public class StructuredSpark {
+	public static void main(String[] args) {
+		String input="/home/purva/spark-data/TweetsProject/input.json";
+		SparkSession spark = SparkSession.builder().master("local").appName("faltu").getOrCreate();
+				
+ 		
+		// rdd
+		Dataset<Row> frameinput = spark.read().json(input);
+		frameinput.printSchema();
+		System.out.println(frameinput.first().toString());
+	} 
+}
